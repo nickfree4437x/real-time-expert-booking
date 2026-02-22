@@ -6,10 +6,25 @@ const app = express();
 const expertRoutes = require("./routes/expert.routes");
 const bookingRoutes = require("./routes/booking.routes");
 
-// ✅ CORS (dev setup)
+// ✅ Allowed Origins (Dev + Prod)
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://real-time-expert-booking.vercel.app",
+];
+
+// ✅ CORS Setup (Production Ready)
 app.use(
   cors({
-    origin: "https://real-time-expert-booking.vercel.app",
+    origin: function (origin, callback) {
+      // Allow requests with no origin (Postman, curl, mobile apps)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -23,6 +38,7 @@ app.use(express.json());
 app.use("/experts", expertRoutes);
 app.use("/bookings", bookingRoutes);
 
+// ✅ Health Check
 app.get("/health", (req, res) => {
   res.json({ status: "OK", message: "Backend is running 🚀" });
 });
