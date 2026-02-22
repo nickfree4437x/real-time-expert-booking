@@ -9,7 +9,7 @@ const bookingRoutes = require("./routes/booking.routes");
 // ✅ CORS (dev setup)
 app.use(
   cors({
-    origin: "https://real-time-expert-booking.vercel.app/",
+    origin: "https://real-time-expert-booking.vercel.app",
     credentials: true,
     methods: ["GET", "POST", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
